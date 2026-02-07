@@ -1,12 +1,12 @@
 import { routesTableData, RouteRow } from "../../data/dummyData";
 
-function statusBadge(status: RouteRow["status"]) {
+function statusStyle(status: RouteRow["status"]) {
   if (status === "Finished") return "badge-success";
   if (status === "In Progress") return "badge-info";
   return "badge-ghost";
 }
 
-function progressColor(percent: number) {
+function progressStyle(percent: number) {
   if (percent === 100) return "progress-success";
   if (percent > 0) return "progress-primary";
   return "progress-neutral";
@@ -14,125 +14,96 @@ function progressColor(percent: number) {
 
 export default function RoutesTable() {
   return (
-    <div className="card bg-white border border-base-200">
-      <div className="card-body p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold">Today&apos;s Routes</h2>
-            <p className="text-sm text-base-content/60 mt-1">
-              Track route progress, truck assignment, and driver status.
-            </p>
-          </div>
+    <div className="bg-white border border-base-200 rounded-xl">
+      {/* Title */}
+      <div className="px-6 pt-5 pb-3">
+        <h2 className="text-lg font-semibold">Today’s Routes</h2>
+        <p className="text-sm text-base-content/60 mt-1">
+          Monitor route progress and driver assignments
+        </p>
+      </div>
 
-          <div className="hidden md:flex items-center gap-2">
-            <span className="badge badge-outline">Live</span>
-            <span className="badge badge-outline">Today</span>
-          </div>
-        </div>
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="table table-fixed w-full min-w-[1300px]">
+          <thead className="bg-base-100">
+            <tr className="text-xs uppercase tracking-wide text-base-content/60">
+              <th className="px-6 py-4 w-24">Route</th>
+              <th className="px-6 py-4 w-28">Truck</th>
+              <th className="px-6 py-4 w-40">Truck ID</th>
+              <th className="px-6 py-4 w-60">Driver</th>
+              <th className="px-6 py-4 w-32 text-center">Stops</th>
+              <th className="px-6 py-4 w-[480px]">Progress</th>
+              <th className="px-6 py-4 w-36">Status</th>
+            </tr>
+          </thead>
 
-        <div className="divider my-3" />
+          <tbody>
+            {routesTableData.map((r) => {
+              const percent =
+                r.totalStops === 0
+                  ? 0
+                  : Math.round((r.coveredStops / r.totalStops) * 100);
 
-        {/* Table wrapper (mobile horizontal scroll only if needed) */}
-        <div className="overflow-x-auto">
-          <table className="table table-zebra table-auto w-full">
-            <thead>
-              <tr className="text-sm">
-                <th className="px-4 py-3 align-middle">Route</th>
-                <th className="px-4 py-3 align-middle">Truck No</th>
-                <th className="px-4 py-3 align-middle">Truck ID</th>
-                <th className="px-4 py-3 align-middle">Driver</th>
-                <th className="px-4 py-3 align-middle">Stops</th>
-                <th className="px-4 py-3 align-middle">Progress</th>
-                <th className="px-4 py-3 align-middle">Status</th>
-              </tr>
-            </thead>
+              return (
+                <tr
+                  key={r.routeNo}
+                  className="border-b border-base-200 hover:bg-base-200/40 transition"
+                >
+                  {/* Route */}
+                  <td className="px-6 py-4 font-medium">
+                    <span className="badge badge-outline">{r.routeNo}</span>
+                  </td>
 
-            <tbody>
-              {routesTableData.map((r) => {
-                const percent =
-                  r.totalStops === 0
-                    ? 0
-                    : Math.round((r.coveredStops / r.totalStops) * 100);
+                  {/* Truck */}
+                  <td className="px-6 py-4">
+                    <span className="badge badge-ghost">{r.truckNo}</span>
+                  </td>
 
-                return (
-                  <tr key={r.routeNo} className="hover:bg-base-200/40">
-                    {/* Route */}
-                    <td className="px-4 py-3 align-middle">
-                      <span className="badge badge-outline font-semibold">
-                        {r.routeNo}
+                  {/* Truck ID */}
+                  <td className="px-6 py-4 font-medium">{r.truckId}</td>
+
+                  {/* Driver */}
+                  <td className="px-6 py-4">
+                    <div className="font-medium">{r.driverName}</div>
+                    <div className="text-xs text-base-content/50">
+                      Assigned driver
+                    </div>
+                  </td>
+
+                  {/* Stops */}
+                  <td className="px-6 py-4 text-center font-semibold">
+                    {r.coveredStops}/{r.totalStops}
+                  </td>
+
+                  {/* Progress */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <progress
+                        className={`progress w-80 ${progressStyle(percent)}`}
+                        value={percent}
+                        max={100}
+                      />
+                      <span className="text-sm font-semibold w-12">
+                        {percent}%
                       </span>
-                    </td>
+                    </div>
+                    <div className="text-xs text-base-content/50 mt-1">
+                      Stops covered
+                    </div>
+                  </td>
 
-                    {/* Truck No */}
-                    <td className="px-4 py-3 align-middle">
-                      <span className="badge badge-ghost">{r.truckNo}</span>
-                    </td>
-
-                    {/* Truck ID */}
-                    <td className="px-4 py-3 align-middle font-medium">
-                      {r.truckId}
-                    </td>
-
-                    {/* Driver */}
-                    <td className="px-4 py-3 align-middle">{r.driverName}</td>
-
-                    {/* Stops */}
-                    <td className="px-4 py-3 align-middle">
-                      <span className="font-semibold">{r.totalStops}</span>
-                      <span className="text-xs text-base-content/60 ml-2">
-                        total
-                      </span>
-                    </td>
-
-                    {/* Progress */}
-                    <td className="px-4 py-3 align-middle min-w-[300px]">
-                      <div className="flex items-center gap-3">
-                        <progress
-                          className={`progress w-56 ${progressColor(percent)}`}
-                          value={percent}
-                          max={100}
-                        />
-                        <span className="text-sm font-semibold w-10">
-                          {percent}%
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-base-content/60 mt-1">
-                        Covered:{" "}
-                        <span className="font-medium text-base-content">
-                          {r.coveredStops}
-                        </span>{" "}
-                        / {r.totalStops}
-                      </p>
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-4 py-3 align-middle">
-                      <span
-                        className={`badge badge-sm ${statusBadge(r.status)}`}
-                      >
-                        {r.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-          <p className="text-xs text-base-content/60">
-            Showing {routesTableData.length} routes
-          </p>
-
-          <div className="flex items-center gap-2">
-            <span className="badge badge-ghost">Not Started</span>
-            <span className="badge badge-info">In Progress</span>
-            <span className="badge badge-success">Finished</span>
-          </div>
-        </div>
+                  {/* Status */}
+                  <td className="px-6 py-4">
+                    <span className={`badge ${statusStyle(r.status)}`}>
+                      {r.status}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
