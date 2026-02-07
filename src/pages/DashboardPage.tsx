@@ -12,9 +12,6 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-bold">
             Milk Route Optimization Dashboard
           </h1>
-          <p className="text-sm text-base-content/70 mt-1">
-            One page dashboard (dummy data) — 3 rows layout
-          </p>
         </div>
 
         {/* Row 1 */}
