@@ -16,45 +16,71 @@ export default function FarmersPie() {
     farmersPieData.farmersSentRequestToday;
 
   const data = {
-    labels: ["Registered farmers (total)", "Farmers sent request today"],
+    labels: ["Requests today", "Registered (remaining)"],
     datasets: [
       {
-        data: [remaining, farmersPieData.farmersSentRequestToday],
-        borderWidth: 1,
+        data: [farmersPieData.farmersSentRequestToday, remaining],
+        backgroundColor: ["#22c55e", "#e5e7eb"], // green + light gray
+        borderColor: "#ffffff",
+        borderWidth: 2,
       },
     ],
   };
 
   const options: ChartOptions<"pie"> = {
     responsive: true,
+    maintainAspectRatio: false, // IMPORTANT: lets us control size with container
     plugins: {
       legend: {
-        position: "bottom",
+        position: "right", // better layout (not taking vertical space)
+        labels: {
+          boxWidth: 14,
+          boxHeight: 14,
+          padding: 14,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => {
+            const label = ctx.label ?? "";
+            const value = ctx.raw as number;
+            return `${label}: ${value}`;
+          },
+        },
       },
     },
   };
 
   return (
-    <div className="card bg-white border border-base-200">
-      <div className="card-body p-5">
+    <div className="bg-white border border-base-200 rounded-2xl shadow-sm overflow-hidden">
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-base-200">
         <h2 className="text-lg font-semibold">Farmers Overview</h2>
-        <p className="text-sm text-base-content/70 mt-1">
-          2 parts: total registered vs farmers who sent request today
+        <p className="text-sm text-base-content/60 mt-1">
+          Total registered vs farmers who sent request today
         </p>
+      </div>
 
-        <div className="mt-4">
-          <Pie data={data} options={options} />
+      {/* Content */}
+      <div className="p-6">
+        {/* Chart area */}
+        <div className="flex items-center justify-center">
+          {/* Fixed height controls pie size */}
+          <div className="w-full max-w-[520px] h-[260px]">
+            <Pie data={data} options={options} />
+          </div>
         </div>
 
-        <div className="mt-4 text-sm">
-          <div className="flex justify-between">
-            <span>Total registered</span>
+        {/* Summary numbers */}
+        <div className="mt-6 border-t border-base-200 pt-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-base-content/70">Total registered</span>
             <span className="font-semibold">
               {farmersPieData.totalRegisteredFarmers}
             </span>
           </div>
-          <div className="flex justify-between">
-            <span>Requests today</span>
+          <div className="flex items-center justify-between text-sm mt-2">
+            <span className="text-base-content/70">Requests today</span>
             <span className="font-semibold">
               {farmersPieData.farmersSentRequestToday}
             </span>
