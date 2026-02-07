@@ -1,5 +1,5 @@
 import { Droplet, Users, Truck, UserCheck } from "lucide-react";
-import { summaryData } from "../data/dummyData";
+import { summaryData } from "../../data/dummyData";
 
 function StatCard({
   title,

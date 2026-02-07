@@ -1,5 +1,5 @@
-import { RouteRow } from "../data/dummyData";
-import { routesTableData } from "../data/dummyData";
+import { RouteRow } from "../../data/dummyData";
+import { routesTableData } from "../../data/dummyData";
 
 function statusBadge(status: RouteRow["status"]) {
   if (status === "Not Started") return "badge badge-ghost";
