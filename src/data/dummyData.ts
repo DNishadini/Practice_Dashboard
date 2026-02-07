@@ -34,7 +34,7 @@ export const summaryData = {
   trucksInMaintenance: 1,
 };
 
-export const milkWeekly: WeeklyPoint[] = [
+export const milkWeekly = [
   { day: "Mon", value: 1200 },
   { day: "Tue", value: 1400 },
   { day: "Wed", value: 1100 },
@@ -42,6 +42,16 @@ export const milkWeekly: WeeklyPoint[] = [
   { day: "Fri", value: 1550 },
   { day: "Sat", value: 1750 },
   { day: "Sun", value: 1820 },
+];
+
+export const milkWeeklyLastWeek = [
+  { day: "Mon", value: 1000 },
+  { day: "Tue", value: 1280 },
+  { day: "Wed", value: 980 },
+  { day: "Thu", value: 1500 },
+  { day: "Fri", value: 1420 },
+  { day: "Sat", value: 1600 },
+  { day: "Sun", value: 1700 },
 ];
 
 export const distanceByRouteWeekly: RouteWeeklyDistance[] = [

@@ -8,6 +8,7 @@ import {
   PointElement,
   Tooltip,
   Legend,
+  Filler,
   ChartOptions,
 } from "chart.js";
 import { distanceByRouteWeekly, RouteId } from "../../data/dummyData";
@@ -20,6 +21,7 @@ ChartJS.register(
   PointElement,
   Tooltip,
   Legend,
+  Filler,
 );
 
 type Filter = RouteId | "ALL";
@@ -31,7 +33,6 @@ export default function DistanceLineChart() {
     const baseLabels = distanceByRouteWeekly[0].weekly.map((p) => p.day);
 
     if (active === "ALL") {
-      // sum all routes per day
       const summed = baseLabels.map((day) => {
         let total = 0;
         for (const r of distanceByRouteWeekly) {
@@ -44,7 +45,7 @@ export default function DistanceLineChart() {
       return {
         labels: baseLabels,
         values: summed,
-        title: "Total distance covered by trucks (All routes)",
+        title: "Total distance covered per week (All routes)",
       };
     }
 
@@ -62,29 +63,75 @@ export default function DistanceLineChart() {
       {
         label: "Distance (km)",
         data: values,
-        tension: 0.35,
+
+        borderColor: "#6366f1",
+        borderWidth: 3,
+        tension: 0.45,
+
+        fill: true,
+        backgroundColor: (ctx: any) => {
+          const { chart } = ctx;
+          const { ctx: canvas, chartArea } = chart;
+          if (!chartArea) return null;
+
+          const g = canvas.createLinearGradient(
+            0,
+            chartArea.top,
+            0,
+            chartArea.bottom,
+          );
+          g.addColorStop(0, "rgba(99,102,241,0.30)");
+          g.addColorStop(1, "rgba(99,102,241,0.04)");
+          return g;
+        },
+
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        pointBackgroundColor: "#6366f1",
+        pointBorderColor: "#ffffff",
+        pointBorderWidth: 2,
       },
     ],
   };
 
   const options: ChartOptions<"line"> = {
     responsive: true,
-    plugins: { legend: { position: "bottom" } },
-    scales: { y: { beginAtZero: true } },
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: { usePointStyle: true, pointStyle: "line", padding: 18 },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.parsed.y} km`,
+        },
+      },
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { beginAtZero: true, grid: { color: "rgba(0,0,0,0.06)" } },
+    },
   };
 
   return (
-    <div className="card bg-white border border-base-200">
-      <div className="card-body p-5">
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <p className="text-sm text-base-content/70 mt-1">
+    <div className="bg-white border border-base-200 rounded-2xl shadow-sm overflow-hidden">
+      {/* SAME HEADER STYLE AS MILK CARD */}
+      <div className="px-6 py-5 border-b border-base-200 bg-gradient-to-r from-indigo-50 to-white">
+        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+        <p className="text-sm text-base-content/60 mt-1">
           Click buttons below to filter distance by route
         </p>
+      </div>
 
+      <div className="p-6">
         <RouteFilter active={active} onChange={setActive} />
 
-        <div className="mt-4">
-          <Line data={data} options={options} />
+        {/* SAME CHART BOX HEIGHT AS MILK CARD */}
+        <div className="mt-5 rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
+          <div className="h-[340px]">
+            <Line data={data} options={options} />
+          </div>
         </div>
       </div>
     </div>
