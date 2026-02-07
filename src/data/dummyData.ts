@@ -21,10 +21,17 @@ export type RouteRow = {
 };
 
 export const summaryData = {
-  totalMilkTodayLiters: 1240,
-  farmersProvidedToday: 36,
-  availableTrucksToday: 7,
-  availableDriversToday: 14,
+  milkCollectedTodayLiters: 1240,
+  milkVsYesterdayPercent: 12,
+
+  pendingRequestsToday: 23,
+  pendingRequestsNote: "Needs assignment",
+
+  driversAvailableToday: 14,
+  driversOnRoute: 2,
+
+  trucksAvailableToday: 7,
+  trucksInMaintenance: 1,
 };
 
 export const milkWeekly: WeeklyPoint[] = [
@@ -117,7 +124,7 @@ export const routesTableData: RouteRow[] = [
     routeNo: "R1",
     truckNo: "T-04",
     truckId: "TRK-004",
-    driverName: "Nimal",
+    driverName: "Nimal Perera",
     totalStops: 8,
     coveredStops: 0,
     status: "Not Started",
@@ -126,7 +133,7 @@ export const routesTableData: RouteRow[] = [
     routeNo: "R2",
     truckNo: "T-01",
     truckId: "TRK-001",
-    driverName: "Suresh",
+    driverName: "Suresh Kumara",
     totalStops: 6,
     coveredStops: 3,
     status: "In Progress",
@@ -135,7 +142,7 @@ export const routesTableData: RouteRow[] = [
     routeNo: "R3",
     truckNo: "T-03",
     truckId: "TRK-003",
-    driverName: "Kasun",
+    driverName: "Kasun Wijesinghe",
     totalStops: 7,
     coveredStops: 7,
     status: "Finished",
