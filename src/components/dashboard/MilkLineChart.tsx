@@ -229,8 +229,8 @@ export default function MilkLineChart() {
 
       {/* Chart area */}
       <div className="p-6">
-        <div className="rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
-          <div className="h-[320px]">
+        <div className="mt-4 rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
+          <div className="h-[340px]">
             <Line data={data} options={options} />
           </div>
         </div>

@@ -10,9 +10,15 @@ export default function RouteFilter({
   onChange: (val: RouteId | "ALL") => void;
 }) {
   return (
-    <div className="mt-4">
-      {/* one-line scroll row */}
-      <div className="flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap pb-2">
+    <div className="mt-3">
+      {/* one line + scrollbar hidden */}
+      <div
+        className="
+          flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap
+          [-ms-overflow-style:none] [scrollbar-width:none]
+          [&::-webkit-scrollbar]:hidden
+        "
+      >
         {routes.map((r) => {
           const isActive = r === active;
 
@@ -22,8 +28,8 @@ export default function RouteFilter({
               type="button"
               onClick={() => onChange(r)}
               className={`
-                px-4 py-2 rounded-full text-sm font-medium transition
-                border shrink-0
+                shrink-0 rounded-full px-3 py-1 text-xs font-medium transition
+                border
                 ${
                   isActive
                     ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"

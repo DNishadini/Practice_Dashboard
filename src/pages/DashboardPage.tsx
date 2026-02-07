@@ -18,7 +18,7 @@ export default function DashboardPage() {
         <SummaryCards />
 
         {/* Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10">
           <div className="lg:col-span-2">
             <RoutesTable />
           </div>
@@ -28,7 +28,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Row 3 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           <MilkLineChart />
           <DistanceLineChart />
         </div>
