@@ -11,6 +11,7 @@ import {
   Filler,
   ChartOptions,
 } from "chart.js";
+import { MapPin, Truck, TrendingUp } from "lucide-react";
 import { distanceByRouteWeekly, RouteId } from "../../data/dummyData";
 import RouteFilter from "./RouteFilter";
 
@@ -26,10 +27,14 @@ ChartJS.register(
 
 type Filter = RouteId | "ALL";
 
+function formatNumber(n: number) {
+  return n.toLocaleString();
+}
+
 export default function DistanceLineChart() {
   const [active, setActive] = useState<Filter>("ALL");
 
-  const { labels, values, title } = useMemo(() => {
+  const { labels, values, title, activeLabel } = useMemo(() => {
     const baseLabels = distanceByRouteWeekly[0].weekly.map((p) => p.day);
 
     if (active === "ALL") {
@@ -46,6 +51,7 @@ export default function DistanceLineChart() {
         labels: baseLabels,
         values: summed,
         title: "Total distance covered per week (All routes)",
+        activeLabel: "All routes",
       };
     }
 
@@ -54,8 +60,16 @@ export default function DistanceLineChart() {
       labels: baseLabels,
       values: routeData ? routeData.weekly.map((p) => p.value) : [],
       title: `Total distance covered per week (Route ${active.replace("R", "")})`,
+      activeLabel: `Route ${active.replace("R", "")}`,
     };
   }, [active]);
+
+  const stats = useMemo(() => {
+    const total = values.reduce((a, b) => a + b, 0);
+    const avg = values.length ? Math.round(total / values.length) : 0;
+    const max = values.length ? Math.max(...values) : 0;
+    return { total, avg, max };
+  }, [values]);
 
   const data = {
     labels,
@@ -63,11 +77,9 @@ export default function DistanceLineChart() {
       {
         label: "Distance (km)",
         data: values,
-
         borderColor: "#6366f1",
         borderWidth: 3,
         tension: 0.45,
-
         fill: true,
         backgroundColor: (ctx: any) => {
           const { chart } = ctx;
@@ -84,7 +96,6 @@ export default function DistanceLineChart() {
           g.addColorStop(1, "rgba(99,102,241,0.04)");
           return g;
         },
-
         pointRadius: 4,
         pointHoverRadius: 7,
         pointBackgroundColor: "#6366f1",
@@ -104,7 +115,7 @@ export default function DistanceLineChart() {
       },
       tooltip: {
         callbacks: {
-          label: (ctx) => `${ctx.parsed.y} km`,
+          label: (ctx) => `${formatNumber(ctx.parsed.y)} km`,
         },
       },
     },
@@ -116,7 +127,7 @@ export default function DistanceLineChart() {
 
   return (
     <div className="bg-white border border-base-200 rounded-2xl shadow-sm overflow-hidden">
-      {/* SAME HEADER STYLE AS MILK CARD */}
+      {/* Header */}
       <div className="px-6 py-5 border-b border-base-200 bg-gradient-to-r from-indigo-50 to-white">
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
         <p className="text-sm text-base-content/60 mt-1">
@@ -124,11 +135,62 @@ export default function DistanceLineChart() {
         </p>
       </div>
 
-      <div className="p-6">
-        <RouteFilter active={active} onChange={setActive} />
+      {/* Mini stats row */}
+      <div className="px-6 py-4 border-b border-base-200">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="rounded-2xl border border-base-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-indigo-50 p-2">
+                <Truck className="text-indigo-600" size={18} />
+              </div>
+              <div>
+                <p className="text-xs text-base-content/60">Selected</p>
+                <p className="text-xl font-semibold">{activeLabel}</p>
+              </div>
+            </div>
+          </div>
 
-        {/* SAME CHART BOX HEIGHT AS MILK CARD */}
-        <div className="mt-5 rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
+          <div className="rounded-2xl border border-base-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-indigo-50 p-2">
+                <MapPin className="text-indigo-600" size={18} />
+              </div>
+              <div>
+                <p className="text-xs text-base-content/60">Total (week)</p>
+                <p className="text-xl font-semibold">
+                  {formatNumber(stats.total)}{" "}
+                  <span className="text-sm text-base-content/60">km</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-base-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-indigo-50 p-2">
+                <TrendingUp className="text-indigo-600" size={18} />
+              </div>
+              <div>
+                <p className="text-xs text-base-content/60">Average / day</p>
+                <p className="text-xl font-semibold">
+                  {formatNumber(stats.avg)}{" "}
+                  <span className="text-sm text-base-content/60">km</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="p-6">
+        {/* ✅ Chart box */}
+        <div className="rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
+          {/* ✅ Route buttons inside chart header */}
+          <div className="mb-3">
+            <RouteFilter active={active} onChange={setActive} />
+          </div>
+
           <div className="h-[340px]">
             <Line data={data} options={options} />
           </div>

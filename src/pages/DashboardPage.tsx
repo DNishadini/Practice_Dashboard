@@ -28,8 +28,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Row 3 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           <MilkLineChart />
+
+          {/* push distance chart DOWN */}
+
           <DistanceLineChart />
         </div>
       </div>
